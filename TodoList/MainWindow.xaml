@@ -1,0 +1,196 @@
+﻿<Window x:Class="TodoList.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:TodoList"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="800" Width="800" ResizeMode="CanResize"
+        FontFamily="Roboto"
+        FontSize="24"
+        Background="#919191"
+        KeyDown="Window_KeyDown"
+        >
+    <Window.Resources>
+        <ContextMenu x:Key="contextMenu">
+            <MenuItem Header="Terminer" Click="EndedTaskInput"/>
+            <MenuItem Header="Supprimer" Click="DeleteTaskInput"/>
+        </ContextMenu>
+        <ContextMenu x:Key="contextMenuEnded">
+            <MenuItem Header="Réactiver" Click="EndedTaskInput"/>
+            <MenuItem Header="Supprimer" Click="DeleteTaskInput"/>
+        </ContextMenu>
+        <ControlTemplate x:Key = "ButtonTemplate" TargetType = "Button">
+            <Grid>
+                <Ellipse x:Name = "ButtonEllipse" Height = "44" Width = "44" >
+                    <Ellipse.Fill>
+                        <LinearGradientBrush StartPoint = "0,0.2" EndPoint = "0.2,1.4">
+                            <GradientStop Offset = "0" Color = "Red"/>
+                            <GradientStop Offset = "1" Color = "Orange"/>
+                        </LinearGradientBrush>
+                    </Ellipse.Fill>
+                </Ellipse>
+                <ContentPresenter Content = "{TemplateBinding Content}"
+               HorizontalAlignment = "Center" VerticalAlignment = "Center" />
+            </Grid>
+            <ControlTemplate.Triggers>
+                <Trigger Property = "IsMouseOver" Value = "True">
+                    <Setter TargetName = "ButtonEllipse" Property = "Fill" >
+                        <Setter.Value>
+                            <LinearGradientBrush StartPoint = "0,0.2" EndPoint="0.2,1.4">
+                                <GradientStop Offset = "0" Color = "Orange"/>
+                                <GradientStop Offset = "1" Color = "red"/>
+                            </LinearGradientBrush>
+                        </Setter.Value>
+                    </Setter>
+                </Trigger>
+
+                <Trigger Property = "IsPressed" Value = "True">
+                    <Setter Property = "RenderTransform">
+                        <Setter.Value>
+                            <ScaleTransform ScaleX = "0.8" ScaleY = "0.8" CenterX = "0" CenterY = "0" />
+                        </Setter.Value>
+                    </Setter>
+
+                    <Setter Property = "RenderTransformOrigin" Value = "0.5,0.5" />
+                </Trigger>
+            </ControlTemplate.Triggers>
+        </ControlTemplate>
+        <ControlTemplate x:Key = "ButtonIsFinished" TargetType = "Button">
+            <Grid>
+                <Ellipse x:Name = "ButtonEllipse" Height = "44" Width = "44" >
+                    <Ellipse.Fill>
+                        <LinearGradientBrush StartPoint = "0,0.2" EndPoint = "0.2,1.4">
+                            <GradientStop Offset = "0" Color = "Green"/>
+                            <GradientStop Offset = "1" Color="GreenYellow"/>
+                        </LinearGradientBrush>
+                    </Ellipse.Fill>
+                </Ellipse>
+                <ContentPresenter Content = "{TemplateBinding Content}"
+               HorizontalAlignment = "Center" VerticalAlignment = "Center" />
+            </Grid>
+            <ControlTemplate.Triggers>
+                <Trigger Property = "IsMouseOver" Value = "True">
+                    <Setter TargetName = "ButtonEllipse" Property = "Fill" >
+                        <Setter.Value>
+                            <LinearGradientBrush StartPoint = "0,0.2" EndPoint="0.2,1.4">
+                                <GradientStop Offset = "0" Color = "GreenYellow"/>
+                                <GradientStop Offset = "1" Color = "Green"/>
+                            </LinearGradientBrush>
+                        </Setter.Value>
+                    </Setter>
+                </Trigger>
+
+                <Trigger Property = "IsPressed" Value = "True">
+                    <Setter Property = "RenderTransform">
+                        <Setter.Value>
+                            <ScaleTransform ScaleX = "0.8" ScaleY = "0.8" CenterX = "0" CenterY = "0" />
+                        </Setter.Value>
+                    </Setter>
+
+                    <Setter Property = "RenderTransformOrigin" Value = "0.5,0.5" />
+                </Trigger>
+            </ControlTemplate.Triggers>
+        </ControlTemplate>
+        <Style x:Key = "underlineInProgress" TargetType = "TextBlock">
+            <Setter Property="Background">
+                <Setter.Value>
+                    <LinearGradientBrush StartPoint = "1,5" EndPoint="0.2,1.4">
+                        <GradientStop Offset = "0" Color = "red"/>
+                        <GradientStop Offset = "1" Color = "orange"/>
+                    </LinearGradientBrush>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style x:Key = "underlineFinished" TargetType = "TextBlock">
+            <Setter Property="Background">
+                <Setter.Value>
+                    <LinearGradientBrush StartPoint = "1,5" EndPoint="0.2,1.4">
+                        <GradientStop Offset = "0" Color = "green"/>
+                        <GradientStop Offset = "1" Color = "GreenYellow"/>
+                    </LinearGradientBrush>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style TargetType="{x:Type Window}">
+            <Setter Property="FontFamily" Value="Roboto" />
+            <Setter Property="FontSize" Value="24" />
+        </Style>
+        <Style x:Key="inputTask" TargetType="TextBlock">
+            <Setter Property="Background">
+                <Setter.Value>
+                    <LinearGradientBrush StartPoint = "1,5" EndPoint="0.2,1.4">
+                        <GradientStop Offset = "0" Color = "#E2E2E2"/>
+                    </LinearGradientBrush>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="Height">
+                <Setter.Value>40</Setter.Value>
+            </Setter>
+            <Setter Property="TextAlignment" Value="Center"></Setter>
+            <Setter Property="VerticalAlignment" Value="Center"></Setter>
+            <Setter Property="Margin" Value="25"/>
+        </Style>
+    </Window.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="100*"></RowDefinition>
+            <RowDefinition Height="300*"></RowDefinition>
+            <RowDefinition Height="300*"></RowDefinition>
+            <RowDefinition Height="100*"></RowDefinition>
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="0">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="700*"></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <TextBox Margin="0,0,25,0"  Grid.Column="0" Height="40" Text="" TextAlignment="Center" VerticalContentAlignment="Center" x:Name="Date"/>
+            </Grid>
+        </Grid>
+        <Grid Grid.Row="1" >
+            <Grid.RowDefinitions>
+                <RowDefinition Height="600*"></RowDefinition>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="700*"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            <Expander x:Name="Expander_En_Cours" IsExpanded="True">
+                <ScrollViewer Grid.Row="0" Grid.Column="0" VerticalScrollBarVisibility="Hidden" IsEnabled="True">
+                    <StackPanel x:Name="Taches_en_cours">
+                    </StackPanel>
+                </ScrollViewer>
+            </Expander>
+        </Grid>
+        <Grid Grid.Row="2"  >
+            <Grid.RowDefinitions>
+                <RowDefinition Height="600*"></RowDefinition>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="700*"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            <Expander x:Name="Expander_Terminees" IsExpanded="False">
+                <ScrollViewer Grid.Row="0" Grid.Column="0" VerticalScrollBarVisibility="Hidden" IsEnabled="True">
+                    <StackPanel x:Name="Taches_termines">
+                    </StackPanel>
+                </ScrollViewer>
+            </Expander>
+        </Grid>
+
+
+        <Grid Grid.Row="3">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="100*"></ColumnDefinition>
+                    <ColumnDefinition Width="600*"></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                
+                <TextBox Margin="0,0,40,0"  Grid.Column="1" Height="60" Text="" TextAlignment="Center" VerticalContentAlignment="Center" x:Name="addNewTask"/>
+
+                <Rectangle HorizontalAlignment="Right" Grid.Column="0"  Fill="White" Height="60" Stroke="White" Width="60"/>
+                <Image HorizontalAlignment="Right" Grid.Column="0" Height="60" Width="60" Source="/img/plus_icon.png"/>
+                
+            </Grid>
+
+        </Grid>
+    </Grid>
+</Window>
